@@ -2,8 +2,8 @@ homeassistant:
   # Name of the location where Home Assistant is running
   name: Soittila
   # Location required to calculate the time the sun rises and sets
-  latitude: 60.2832596
-  longitude: 24.5150442
+  latitude: !secrets location_latitude
+  longitude: !secrets location_longitude
   # Impacts weather/sunrise data (altitude above sea level in meters)
   elevation: 4
   # metric for Metric, imperial for Imperial
