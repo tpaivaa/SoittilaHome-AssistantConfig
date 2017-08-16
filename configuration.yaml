@@ -1,0 +1,279 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Soittila
+  # Location required to calculate the time the sun rises and sets
+  latitude: 60.2832596
+  longitude: 24.5150442
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 4
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Helsinki
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  # api_password: PASSWORD
+  # Uncomment this if you are using SSL or running in Docker etc
+  # base_url: example.duckdns.org:8123
+
+# Checks for available updates
+updater:
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+# Weather Prediction
+
+
+sensor:
+  - platform: yr
+
+  - platform: mqtt
+    name: "akwc"
+    friendly_name: "akwc"
+    state_topic: "home/DHT/akwc/1/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "akwc kosteus"
+    friendly_name: "akwc Kosteus"
+    state_topic: "home/DHT/akwc/1/temp"
+    unit_of_measurement: '%'
+    value_template: '{{ value_json.Humidity }}'
+
+  - platform: mqtt
+    name: "Keittio"
+    friendly_name: "Keittio"
+    state_topic: "home/sensor/raspi/keittio/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "Kodinhoitohuone"
+    friendly_name: "Kodinhoitohuone"
+    state_topic: "home/sensor/raspi/khh/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "Makuuhuone"
+    friendly_name: "Makuuhuone"
+    state_topic: "home/sensor/raspi/makuuhuone/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "keittio lattia"
+    friendly_name: "keittio lattia"
+    state_topic: "home/sensor/raspi/keittioLattia/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "Olohuone"
+    friendly_name: "olohuone"
+    state_topic: "home/sensor/raspi/olohuone/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "Kodinhoitohuone lattia"
+    friendly_name: "khhLattia"
+    state_topic: "home/sensor/raspi/khhLattia/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "ulkoE"
+    friendly_name: "ulkoE"
+    state_topic: "home/sensor/raspi/ulkoE/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "varaaja keski" 
+    friendly_name: "varaajaMiddle"
+    state_topic: "home/sensor/raspi/varaajaMiddle/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "greeWaterCold"
+    friendly_name: "greeWaterCold"
+    state_topic: "home/sensor/raspi/greeWaterCold/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "greeGasCold"
+    friendly_name: "greeGasCold"
+    state_topic: "home/sensor/raspi/greeGasCold/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "Ylakerta Makuuhuone"
+    friendly_name: "ykMH"
+    state_topic: "home/sensor/raspi/ykMH/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "verantaLattia"
+    friendly_name: "verantaLattia"
+    state_topic: "home/sensor/raspi/verantaLattia/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "veranta"
+    friendly_name: "veranta"
+    state_topic: "home/sensor/raspi/veranta/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "ulkoP"
+    friendly_name: "ulkoP"
+    state_topic: "home/sensor/raspi/ulkoP/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "solarVoltage"
+    friendly_name: "solarVoltage"
+    state_topic: "home/solarlogger/voltage"
+    unit_of_measurement: 'V'
+    value_template: '{{ value_json.Voltage }}'
+
+# Text to speech
+
+tts:
+  - platform: google
+
+
+mqtt:
+  broker: 10.10.10.2
+  port: 1883
+  client_id: home-assistant-1
+  username: ha
+  password: !secret mqtt_password
+
+switch:
+  - platform: mqtt
+    name: "akwc flekti"
+    state_topic: "home/sonoff/akwc/1/stat"
+    command_topic: "home/sonoff/akwc/1"
+    qos: 0
+    payload_on: "on"
+    payload_off: "off"
+    retain: true
+
+notify:
+  - name: HOME
+    platform: pushbullet
+    api_key: !secret pushbullet_apikey
+
+group:
+  default_view:
+    view: yes
+    entities:
+      - group.solar
+      - group.ulko
+      - group.sensorit
+      - group.lattialammot
+      - group.akwc
+      - group.tekniikka
+  sensorit:
+    name: Lämpötilat
+    entities:
+      - sensor.keittio
+      - sensor.kodinhoitohuone
+      - sensor.Makuuhuone
+      - sensor.olohuone
+      - sensor.ylakerta_makuuhuone
+      - sensor.veranta
+
+  solar:
+    name: solar logger
+    view: no
+    entities:
+      - sensor.solarVoltage
+
+  ulko:
+    name: Ulkolämpötilat
+    view: no
+    entities:
+      - sensor.ulkoE
+      - sensor.ulkoP
+
+  lattialammot:
+    name: Lattia lämmöt
+    view: yes
+    entities:
+      - sensor.kodinhoitohuone_lattia
+      - sensor.keittio_lattia
+      - sensor.khh_lattia
+      - sensor.verantaLattia
+
+  akwc:
+    name: Alakerran WC
+    view: yes
+    entities:
+      - sensor.akwc
+      - sensor.akwc_kosteus
+      - switch.akwc_flekti
+
+  tekniikka:
+    name: Tekninentila
+    view: yes
+    entities:
+      - sensor.varaaja_keski
+      - sensor.greeWaterCold
+      - sensor.greeGasCold
+
+automation:
+  - alias: 'akwc flekti automation'
+    trigger:
+      - platform: mqtt
+        topic: "home/DHT/akwc/1/temp"
+        # Optional
+        # payload: 'on'
+    # condition:
+      # condition: or
+      # conditions:
+        # - condition: numeric_state
+          # entity_id: sensor.akwc_kosteus
+          # above: 45
+    action:
+      service_template: >
+        {% if states.sensor.akwc_kosteus | int > 60 %}
+          switch.turn_on
+        {% else %}
+          switch.turn_off
+        {% endif %}      
+      entity_id:
+        - switch.akwc_flekti
