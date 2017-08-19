@@ -190,7 +190,7 @@ switch:
     qos: 0
     payload_on: "on"
     payload_off: "off"
-    retain: true
+    retain: false
 
 notify:
   - name: HOME
@@ -255,25 +255,4 @@ group:
       - sensor.greeWaterCold
       - sensor.greeGasCold
 
-automation:
-  - alias: 'akwc flekti automation'
-    trigger:
-      - platform: mqtt
-        topic: "home/DHT/akwc/1/temp"
-        # Optional
-        # payload: 'on'
-    # condition:
-      # condition: or
-      # conditions:
-        # - condition: numeric_state
-          # entity_id: sensor.akwc_kosteus
-          # above: 45
-    action:
-      service_template: >
-        {% if states.sensor.akwc_kosteus | int > 60 %}
-          switch.turn_on
-        {% else %}
-          switch.turn_off
-        {% endif %}      
-      entity_id:
-        - switch.akwc_flekti
+automation: !include automations.yaml

@@ -1,0 +1,14 @@
+alias: 'akwc flekti automation'
+trigger:
+  - platform: mqtt
+    topic: "home/DHT/akwc/1/temp"
+
+action:
+  service_template: >
+    {% if states.sensor.akwc_kosteus.state | float > 60 %}
+      switch.turn_on
+    {% else %}
+      switch.turn_off
+    {% endif %}
+  entity_id:
+    - switch.akwc_flekti
