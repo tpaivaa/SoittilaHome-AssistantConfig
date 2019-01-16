@@ -1,14 +1,80 @@
-alias: 'akwc flekti automation'
-trigger:
+- id: 'akwcflektiautomation'
+  alias: akwc flekti automation
+  trigger:
   - platform: mqtt
-    topic: "home/DHT/akwc/1/temp"
-
-action:
-  service_template: >
-    {% if states.sensor.akwc_kosteus.state | float > 60 %}
-      switch.turn_on
-    {% else %}
-      switch.turn_off
-    {% endif %}
-  entity_id:
+    topic: home/DHT/akwc/1/temp
+  action:
+    service_template: "{% if states.sensor.akwc_kosteus.state | float > 60 and states.switch.akwc_flekti.state\
+      \ == 'off' %}\n  switch.turn_on\n{% elif states.sensor.akwc_kosteus.state |\
+      \ float < 55 and states.switch.akwc_flekti.state == 'on' %}\n  switch.turn_off\n\
+      {% endif %}\n"
+    entity_id:
     - switch.akwc_flekti
+- id: 'ykvhflektiautomation'
+  alias: ykvh flekti automation
+  trigger:
+  - platform: mqtt
+    topic: home/ykpesuhuone/sensor
+  action:
+    service_template: "{% if states.sensor.ykpesuhuone_kosteus.state | float > 30.0 and states.switch.ykvh_flekti.state\
+      \ == 'off' %}\n  switch.turn_on\n{% elif states.sensor.ykpesuhuone_kosteus.state |\
+      \ float < 30.0 and states.switch.ykvh_flekti.state == 'on' %}\n  switch.turn_off\n\
+      {% endif %}\n"
+    entity_id:
+    - switch.ykvh_flekti
+- id: "ulkovaloautomationon"
+  alias: ulkovalot ON
+  trigger: 
+    - platform: time
+      minutes: '/1'
+      seconds: 00
+  condition:
+    condition: or
+    conditions:
+      - condition: time
+        after: '06:30:00'
+        before: '08:30:00'
+      - condition: time
+        after: '16:00:00'
+        before: '18:00:00'
+  action:
+    service: light.turn_on
+    data:
+      entity_id: group.ulkovalot_kaikki
+      brightness: 255
+- id: "ulkovaloautomationondimm"
+  alias: ulkovalot ON
+  trigger:
+    - platform: time
+      minutes: '/1'
+      seconds: 00
+  condition:
+    condition: or
+    conditions:
+      - condition: time
+        after: '18:01:00'
+        before: '00:30:00'
+  action:
+    service: light.turn_on
+    data:
+      entity_id: group.ulkovalot_kaikki
+      brightness: 5
+
+- id: "ulkovaloautomationoff"
+  alias: ulkovalot OFF
+  trigger: 
+    - platform: time
+      minutes: '/1'
+      seconds: 00
+  condition:
+    condition: or
+    conditions:
+      - condition: time
+        after: '08:31:00'
+        before: '15:59:00'
+      - condition: time
+        after: '00:31:00'
+        before: '06:29:00'
+  action:
+    service: light.turn_off
+    entity_id: group.ulkovalot_kaikki

@@ -5,12 +5,13 @@ homeassistant:
   latitude: !secret location_latitude
   longitude: !secret location_longitude
   # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 4
+  elevation: 80
   # metric for Metric, imperial for Imperial
   unit_system: metric
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: Europe/Helsinki
-
+  customize: !include customize.yaml
+    
 # Show links to resources in log and frontend
 #introduction:
 
@@ -19,6 +20,13 @@ frontend:
 
 # Enables configuration UI
 config:
+
+# 
+
+logger:
+  default: critical
+  logs:
+    homeassistant.components.http.ban: warning
 
 http:
   # Uncomment this to add a password (recommended!)
@@ -47,6 +55,11 @@ sun:
 # Weather Prediction
 
 
+# Ikea Trådfri Gateway
+tradfri:
+  host: 10.10.10.177
+  host: 10.10.10.156
+  allow_tradfri_groups: true
 sensor:
   - platform: yr
 
@@ -61,6 +74,20 @@ sensor:
     name: "akwc kosteus"
     friendly_name: "akwc Kosteus"
     state_topic: "home/DHT/akwc/1/temp"
+    unit_of_measurement: '%'
+    value_template: '{{ value_json.Humidity }}'
+
+  - platform: mqtt
+    name: "ykpesuhuone Temp"
+    friendly_name: "ykph Temp"
+    state_topic: "home/ykpesuhuone/sensor"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
+    name: "ykpesuhuone kosteus"
+    friendly_name: "ykph Kosteus"
+    state_topic: "home/ykpesuhuone/sensor"
     unit_of_measurement: '%'
     value_template: '{{ value_json.Humidity }}'
 
@@ -156,6 +183,13 @@ sensor:
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
+    name: "ykAula"
+    friendly_name: "ykAula"
+    state_topic: "home/sensor/raspi/ykAula/temp"
+    unit_of_measurement: '°C'
+    value_template: '{{ value_json.Temp }}'
+
+  - platform: mqtt
     name: "ulkoP"
     friendly_name: "ulkoP"
     state_topic: "home/sensor/raspi/ulkoP/temp"
@@ -173,7 +207,9 @@ sensor:
 
 tts:
   - platform: google
-
+    cache: true
+    cache_dir: /tmp/tts
+    time_memory: 300 
 
 mqtt:
   broker: 10.10.10.2
@@ -187,7 +223,133 @@ switch:
     name: "akwc flekti"
     state_topic: "home/sonoff/akwc/1/stat"
     command_topic: "home/sonoff/akwc/1"
-    qos: 0
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "ykvh flekti"
+    state_topic: "home/yk/flekti/1/stat"
+    command_topic: "home/yk/flekti/1"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "ykphlattia"
+    state_topic: "home/raspi/rele1/state"
+    command_topic: "home/raspi/rele1"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "khhlattia"
+    state_topic: "home/raspi/rele2/state"
+    command_topic: "home/raspi/rele2"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "keittio"
+    state_topic: "home/raspi/rele3/state"
+    command_topic: "home/raspi/rele3"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "verantalattia"
+    state_topic: "home/raspi/rele4/state"
+    command_topic: "home/raspi/rele4"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "kiertovesipumppu"
+    state_topic: "home/raspi/rele5/state"
+    command_topic: "home/raspi/rele5"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "kiertovesipumppull"
+    state_topic: "home/raspi/rele6/state"
+    command_topic: "home/raspi/rele6"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "patterikiertoventtiili"
+    state_topic: "home/raspi/rele7/state"
+    command_topic: "home/raspi/rele7"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "attack heating"
+    state_topic: "home/raspi/rele8/state"
+    command_topic: "home/raspi/rele8"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "greeohjaus"
+    state_topic: "home/raspi/2rele1/state"
+    command_topic: "home/raspi/2rele1"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "makuuhuonepatteri"
+    state_topic: "home/raspi/2rele2/state"
+    command_topic: "home/raspi/2rele2"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: ""
+    state_topic: "home/raspi/2rele3/state"
+    command_topic: "home/raspi/2rele3"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "olohuonepatterit"
+    state_topic: "home/raspi/2rele4/state"
+    command_topic: "home/raspi/2rele4"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "GreeHeaterReset"
+    state_topic: "home/raspi/3rele2/state"
+    command_topic: "home/raspi/3rele2"
+    qos: 1
     payload_on: "on"
     payload_off: "off"
     retain: false
@@ -197,16 +359,25 @@ notify:
     platform: pushbullet
     api_key: !secret pushbullet_apikey
 
+
+  - platform: nfandroidtv
+    name: "olohuone"
+    host: 10.10.10.213
+
 group:
   default_view:
     view: yes
     entities:
-      - group.solar
       - group.ulko
       - group.sensorit
       - group.lattialammot
       - group.akwc
       - group.tekniikka
+      - group.ulkovalot
+      - group.autotalli
+      - group.talo
+      - group.solar
+
   sensorit:
     name: Lämpötilat
     entities:
@@ -216,6 +387,7 @@ group:
       - sensor.olohuone
       - sensor.ylakerta_makuuhuone
       - sensor.veranta
+      - sensor.ykAula
 
   solar:
     name: solar logger
@@ -240,12 +412,15 @@ group:
       - sensor.verantaLattia
 
   akwc:
-    name: Alakerran WC
+    name: Pesuhuoneet
     view: yes
     entities:
       - sensor.akwc
       - sensor.akwc_kosteus
+      - sensor.ykpesuhuone_Temp
+      - sensor.ykpesuhuone_kosteus
       - switch.akwc_flekti
+      - switch.ykvh_flekti
 
   tekniikka:
     name: Tekninentila
@@ -254,5 +429,59 @@ group:
       - sensor.varaaja_keski
       - sensor.greeWaterCold
       - sensor.greeGasCold
+      - switch.greeohjaus  
+      - switch.kiertovesipumppu
+      - switch.kiertovesipumppull
+      - switch.patterikiertoventtiili
+      - switch.makuuhuonepatteri
+      - switch.olohuonepatterit
+      - switch.ykphlattia
+      - switch.khhlattia
+      - switch.keittio
+      - switch.verantalattia
+  ulkovalot:
+    name: Ulkovalot
+    entities:
+      - light.ulko1
+      - light.ulko2
+      - light.ulko3
+      - light.ulko4
+      - light.ulko5
+      - light.ulko6
+      - light.ulko7
+      - light.ulko8  
+  autotalli:
+    name: Autotalli valot
+    entities:
+      - light.autotalli1
+      - light.autotalli2
+      - light.autotalli3
+  talo:
+    name: Talo valot
+    entities:
+      - light.talo1
+      - light.talo2
 
+  ulkovalot kaikki:
+    control: hidden
+    name: Kaikki Ulkovalot
+    entities:
+      - light.ulko1
+      - light.ulko2
+      - light.ulko3
+      - light.ulko4
+      - light.ulko5
+      - light.ulko6
+      - light.ulko7
+      - light.ulko8
+      - light.talo1
+      - light.talo2
+      - light.autotalli1
+      - light.autotalli2
+      - light.autotalli3
+  lampopumppu:
+    view: no
+    name: Lämpöpumppu
+    entities:
+      - switch.GreeHeaterReset 
 automation: !include automations.yaml
