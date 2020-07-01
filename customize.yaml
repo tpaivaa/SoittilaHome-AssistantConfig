@@ -1,29 +1,29 @@
 switch.greeohjaus:
-  friendly_name: 1. Lämpöpumppu ohjaus
+  friendly_name: Lämpöpumppu ohjaus
   order: 1
 switch.kiertovesipumppu:
-  friendly_name: 2. Pää kiertovesipumppu  
+  friendly_name: Pää kiertovesipumppu  
   order: 2
 switch.kiertovesipumppull:
-  friendly_name: 3. Kiertovesipumppu lattialämmitys
+  friendly_name: Kiertovesipumppu lattialämmitys
   order: 3
 switch.ykphlattia:
-  friendly_name: 9. yläkerta pesuhuone lattia
+  friendly_name: Yläkerta pesuhuone lattia
   order: 9
 switch.verantalattia:
-  friendly_name: 7. Veranta lattia
+  friendly_name: Veranta lattia
   order: 7
 switch.patterikiertoventtiili:
-  friendly_name: 4. Patterikierto venttiili
+  friendly_name: Patterikierto venttiili
   order: 4
 switch.makuuhuonepatteri:
-  friendly_name: 5. Makuuhuone patteri
+  friendly_name: Makuuhuone patteri
   order: 5
 switch.olohuonepatterit:
-  friendly_name: 6. Olohuone patterit
+  friendly_name: Olohuone patterit
   order: 6
 switch.khhlattia:
-  friendly_name: 8. Kodinhoitohuone lattia
+  friendly_name: Kodinhoitohuone lattia
   order: 8
 switch.keittio:
   friendly_name: Keittiö lattia

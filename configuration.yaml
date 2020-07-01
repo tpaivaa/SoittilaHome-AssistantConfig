@@ -14,20 +14,32 @@ homeassistant:
     
 # Show links to resources in log and frontend
 #introduction:
-
+system_health:
 # Enables the frontend
 frontend:
+
+#mobile app
+mobile_app:
 
 # Enables configuration UI
 config:
 
-# 
+# Influx database
+#
+#influxdb:
+#  host: localhost
+#  port: 8086
+#  database: home_assistant
+#  username: hass
+#  password: hass1234
 
+#
 logger:
-  default: critical
+  default: error
   logs:
+    homeassistant.core: error
     homeassistant.components.http.ban: warning
-
+    homeassistant.components.mqtt: error
 http:
   # Uncomment this to add a password (recommended!)
   # api_password: PASSWORD
@@ -56,160 +68,140 @@ sun:
 
 
 # Ikea Trådfri Gateway
-tradfri:
-  host: 10.10.10.177
-  host: 10.10.10.156
-  allow_tradfri_groups: true
+#tradfri:
+#  host: 10.10.10.169
+#  allow_tradfri_groups: true
 sensor:
   - platform: yr
 
   - platform: mqtt
     name: "akwc"
-    friendly_name: "akwc"
     state_topic: "home/DHT/akwc/1/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "akwc kosteus"
-    friendly_name: "akwc Kosteus"
     state_topic: "home/DHT/akwc/1/temp"
     unit_of_measurement: '%'
     value_template: '{{ value_json.Humidity }}'
 
   - platform: mqtt
     name: "ykpesuhuone Temp"
-    friendly_name: "ykph Temp"
     state_topic: "home/ykpesuhuone/sensor"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "ykpesuhuone kosteus"
-    friendly_name: "ykph Kosteus"
     state_topic: "home/ykpesuhuone/sensor"
     unit_of_measurement: '%'
     value_template: '{{ value_json.Humidity }}'
 
   - platform: mqtt
     name: "Keittio"
-    friendly_name: "Keittio"
     state_topic: "home/sensor/raspi/keittio/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "Kodinhoitohuone"
-    friendly_name: "Kodinhoitohuone"
     state_topic: "home/sensor/raspi/khh/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "Makuuhuone"
-    friendly_name: "Makuuhuone"
     state_topic: "home/sensor/raspi/makuuhuone/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "keittio lattia"
-    friendly_name: "keittio lattia"
     state_topic: "home/sensor/raspi/keittioLattia/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "Olohuone"
-    friendly_name: "olohuone"
     state_topic: "home/sensor/raspi/olohuone/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "Kodinhoitohuone lattia"
-    friendly_name: "khhLattia"
     state_topic: "home/sensor/raspi/khhLattia/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "ulkoE"
-    friendly_name: "ulkoE"
     state_topic: "home/sensor/raspi/ulkoE/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "varaaja keski" 
-    friendly_name: "varaajaMiddle"
     state_topic: "home/sensor/raspi/varaajaMiddle/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "greeWaterCold"
-    friendly_name: "greeWaterCold"
     state_topic: "home/sensor/raspi/greeWaterCold/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "greeGasCold"
-    friendly_name: "greeGasCold"
     state_topic: "home/sensor/raspi/greeGasCold/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "Ylakerta Makuuhuone"
-    friendly_name: "ykMH"
     state_topic: "home/sensor/raspi/ykMH/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "verantaLattia"
-    friendly_name: "verantaLattia"
     state_topic: "home/sensor/raspi/verantaLattia/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "veranta"
-    friendly_name: "veranta"
     state_topic: "home/sensor/raspi/veranta/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "ykAula"
-    friendly_name: "ykAula"
     state_topic: "home/sensor/raspi/ykAula/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "ulkoP"
-    friendly_name: "ulkoP"
     state_topic: "home/sensor/raspi/ulkoP/temp"
     unit_of_measurement: '°C'
     value_template: '{{ value_json.Temp }}'
 
   - platform: mqtt
     name: "solarVoltage"
-    friendly_name: "solarVoltage"
     state_topic: "home/solarlogger/voltage"
     unit_of_measurement: 'V'
     value_template: '{{ value_json.Voltage }}'
 
-# Text to speech
-
-tts:
-  - platform: google
-    cache: true
-    cache_dir: /tmp/tts
-    time_memory: 300 
+binary_sensor:
+  - platform: "mqtt"
+    state_topic: "zigbee2mqtt/Ulkoovi"
+    availability_topic: "zigbee2mqtt/bridge/state"
+    payload_on: false
+    payload_off: true
+    value_template: "{{ value_json.contact }}"
+    device_class: "door"
 
 mqtt:
   broker: 10.10.10.2
@@ -217,6 +209,13 @@ mqtt:
   client_id: home-assistant-1
   username: ha
   password: !secret mqtt_password
+  discovery: true
+  birth_message:
+    topic: 'hass/status'
+    payload: 'online'
+  will_message:
+    topic: 'hass/status'
+    payload: 'offline'
 
 switch:
   - platform: mqtt
@@ -248,8 +247,8 @@ switch:
 
   - platform: mqtt
     name: "khhlattia"
-    state_topic: "home/raspi/rele2/state"
-    command_topic: "home/raspi/rele2"
+    state_topic: "home/raspi/rele3/state"
+    command_topic: "home/raspi/rele3"
     qos: 1
     payload_on: "on"
     payload_off: "off"
@@ -257,8 +256,8 @@ switch:
 
   - platform: mqtt
     name: "keittio"
-    state_topic: "home/raspi/rele3/state"
-    command_topic: "home/raspi/rele3"
+    state_topic: "home/raspi/rele2/state"
+    command_topic: "home/raspi/rele2"
     qos: 1
     payload_on: "on"
     payload_off: "off"
@@ -346,7 +345,7 @@ switch:
     retain: false
 
   - platform: mqtt
-    name: "GreeHeaterReset"
+    name: "greeheaterreset"
     state_topic: "home/raspi/3rele2/state"
     command_topic: "home/raspi/3rele2"
     qos: 1
@@ -354,15 +353,47 @@ switch:
     payload_off: "off"
     retain: false
 
+light:
+  - platform: mqtt
+    name: "traktoritallisw"
+    state_topic: "stat/traktoritallisw/RESULT"
+    value_template: "{{ value_json.POWER }}"
+    command_topic: "cmnd/traktoritallisw/POWER"
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+    retain: false
+ 
+  - platform: mqtt
+    name: "autotallisw"
+    state_topic: "stat/autotallisw/RESULT"
+    value_template: "{{ value_json.POWER }}"
+    command_topic: "cmnd/autotallisw/POWER"
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: "Online"
+    payload_not_available: "Offline"
+    retain: false
+
+  - platform: mqtt
+    name: "sauna"
+    state_topic: "stat/tasmota-4795/RESULT"
+    value_template: "{{ value_json.POWER }}"
+    command_topic: "cmnd/tasmota-4795/POWER"
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: "Online"
+    payload_not_available: "Offline"
+    retain: false
+
 notify:
   - name: HOME
     platform: pushbullet
     api_key: !secret pushbullet_apikey
-
-
-  - platform: nfandroidtv
-    name: "olohuone"
-    host: 10.10.10.213
 
 group:
   default_view:
@@ -377,6 +408,7 @@ group:
       - group.autotalli
       - group.talo
       - group.solar
+      - group.jouluvalot
 
   sensorit:
     name: Lämpötilat
@@ -449,7 +481,8 @@ group:
       - light.ulko5
       - light.ulko6
       - light.ulko7
-      - light.ulko8  
+      - light.ulko8
+      - light.ulko9
   autotalli:
     name: Autotalli valot
     entities:
@@ -461,7 +494,13 @@ group:
     entities:
       - light.talo1
       - light.talo2
-
+  jouluvalot:
+    name: Jouluvalot
+    view: yes
+    entities:
+      - light.autotallisw
+      - light.traktoritallisw
+      - light.sauna
   ulkovalot kaikki:
     control: hidden
     name: Kaikki Ulkovalot
@@ -474,6 +513,7 @@ group:
       - light.ulko6
       - light.ulko7
       - light.ulko8
+      - light.ulko9
       - light.talo1
       - light.talo2
       - light.autotalli1
@@ -483,5 +523,5 @@ group:
     view: no
     name: Lämpöpumppu
     entities:
-      - switch.GreeHeaterReset 
+      - switch.greeheaterreset 
 automation: !include automations.yaml

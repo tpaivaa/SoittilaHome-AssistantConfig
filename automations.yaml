@@ -1,80 +1,161 @@
-- id: 'akwcflektiautomation'
-  alias: akwc flekti automation
+- id: akwcflektiautomation
+  alias: akwc flekti on automation
   trigger:
   - platform: mqtt
     topic: home/DHT/akwc/1/temp
+  condition:
+  - condition: template
+    value_template: '{{ 50 > (trigger.payload_json.Humidity | float) }}'
+  - condition: state
+    entity_id: switch.akwc_flekti
+    state: 'off'
   action:
-    service_template: "{% if states.sensor.akwc_kosteus.state | float > 60 and states.switch.akwc_flekti.state\
-      \ == 'off' %}\n  switch.turn_on\n{% elif states.sensor.akwc_kosteus.state |\
-      \ float < 55 and states.switch.akwc_flekti.state == 'on' %}\n  switch.turn_off\n\
-      {% endif %}\n"
-    entity_id:
-    - switch.akwc_flekti
-- id: 'ykvhflektiautomation'
+  - data:
+      entity_id: switch.akwc_flekti
+    service: switch.turn_on
+- id: ykvhflektiautomation
   alias: ykvh flekti automation
   trigger:
   - platform: mqtt
     topic: home/ykpesuhuone/sensor
   action:
-    service_template: "{% if states.sensor.ykpesuhuone_kosteus.state | float > 30.0 and states.switch.ykvh_flekti.state\
-      \ == 'off' %}\n  switch.turn_on\n{% elif states.sensor.ykpesuhuone_kosteus.state |\
-      \ float < 30.0 and states.switch.ykvh_flekti.state == 'on' %}\n  switch.turn_off\n\
-      {% endif %}\n"
-    entity_id:
-    - switch.ykvh_flekti
-- id: "ulkovaloautomationon"
+    service_template: "{% if states.sensor.ykpesuhuone_kosteus.state | float > 40.0\
+      \ and states.switch.ykvh_flekti.state == 'off' %} \n  switch.turn_on\n{% elif\
+      \ states.sensor.ykpesuhuone_kosteus.state | float < 36.0 and states.switch.ykvh_flekti.state\
+      \ == 'on' %}\n  switch.turn_off\n{% else %}\n  switch.turn_off\n{% endif %}\n"
+    entity_id: switch.ykvh_flekti
+- id: ulkovaloautomationon
   alias: ulkovalot ON
-  trigger: 
-    - platform: time
-      minutes: '/1'
-      seconds: 00
+  trigger:
+    minutes: /1
+    platform: time_pattern
   condition:
     condition: or
     conditions:
-      - condition: time
-        after: '06:30:00'
-        before: '08:30:00'
-      - condition: time
-        after: '16:00:00'
-        before: '18:00:00'
+    - condition: time
+      after: 06:30:00
+      before: 08:30:00
+    - condition: time
+      after: '16:00:00'
+      before: '20:00:00'
   action:
-    service: light.turn_on
+  - service: light.turn_on
     data:
       entity_id: group.ulkovalot_kaikki
       brightness: 255
-- id: "ulkovaloautomationondimm"
-  alias: ulkovalot ON
+- id: ulkovaloautomationondimm
+  alias: ulkovalot ON 20-
   trigger:
-    - platform: time
-      minutes: '/1'
-      seconds: 00
+    minutes: /1
+    platform: time_pattern
+  condition:
+  - condition: or
+    conditions:
+    - after: '20:01:00'
+      before: 00:30:00
+      condition: time
+  action:
+  - data:
+      brightness: 5
+      entity_id: group.ulkovalot_kaikki
+    service: light.turn_on
+- id: ulkovaloautomationoff
+  alias: ulkovalot OFF
+  trigger:
+  - platform: time_pattern
+    minutes: /1
   condition:
     condition: or
     conditions:
-      - condition: time
-        after: '18:01:00'
-        before: '00:30:00'
+    - condition: time
+      after: 08:31:00
+      before: '15:59:00'
+    - condition: time
+      after: 00:31:00
+      before: '6:29:00'
   action:
-    service: light.turn_on
+  - service: light.turn_off
     data:
       entity_id: group.ulkovalot_kaikki
-      brightness: 5
-
-- id: "ulkovaloautomationoff"
-  alias: ulkovalot OFF
-  trigger: 
-    - platform: time
-      minutes: '/1'
-      seconds: 00
+- id: '1572171421824'
+  alias: ykFlektiSwitchToggle
+  trigger:
+  - platform: mqtt
+    topic: zigbee2mqtt/0x00158d000359887b
   condition:
-    condition: or
-    conditions:
-      - condition: time
-        after: '08:31:00'
-        before: '15:59:00'
-      - condition: time
-        after: '00:31:00'
-        before: '06:29:00'
+  - condition: template
+    value_template: '{{ ''single'' == trigger.payload_json.click }}'
   action:
+    data:
+      entity_id: switch.ykvh_flekti
+    service: switch.toggle
+- id: Tasmotaautomationanable
+  alias: Enable MQTT discovery for all devices
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/tasmotas/state
+      payload: ''
+- id: '1574618514683'
+  alias: Jouluvalot Päälle
+  description: Valot päälle aamulla 6 -9 ja illalla 16 - 24
+  trigger:
+  - minutes: /1
+    platform: time_pattern
+  condition:
+  - condition: state
+    entity_id: group.jouluvalot
+    state: 'off'
+  - condition: or
+    conditions:
+    - condition: time
+      after: '16:00:00'
+      before: '23:30:00'
+    - condition: time
+      after: 06:00:00
+      before: 09:30:00
+  action:
+  - data:
+      entity_id: group.jouluvalot
+    service: light.turn_on
+- id: '1574621504048'
+  alias: Jouluvalot pois
+  description: Pois päältä päivällä 9 - 16 ja yöllä 24-6
+  trigger:
+    minutes: /1
+    platform: time_pattern
+  condition:
+  - condition: state
+    entity_id: group.jouluvalot
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: time
+      after: 09:31:00
+      before: '15:59:00'
+    - condition: time
+      after: '23:31:00'
+      before: 06:00:00
+  action:
+  - data:
+      entity_id: group.jouluvalot
     service: light.turn_off
-    entity_id: group.ulkovalot_kaikki
+- id: '1593544778034'
+  alias: ak flekti off aitomation
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: home/DHT/akwc/1/temp
+  condition:
+  - condition: state
+    entity_id: switch.akwc_flekti
+    state: 'on'
+  - condition: template
+    value_template: '{{ 49 < (trigger.payload_json.Humidity | float)}}'
+  action:
+  - data:
+      entity_id: switch.akwc_flekti
+    service: switch.turn_off
